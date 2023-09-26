@@ -206,6 +206,9 @@ fmt:
 
 .PHONY: run-dev
 run-dev:
+	pkill traefik || :
 	go generate
 	GO111MODULE=on go build ./cmd/traefik
-	./traefik
+	
+	cp traefik /home/adendge/work/check-expired-jwt/
+

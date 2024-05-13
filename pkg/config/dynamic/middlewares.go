@@ -33,9 +33,23 @@ type Middleware struct {
 	Compress          *Compress          `json:"compress,omitempty" toml:"compress,omitempty" yaml:"compress,omitempty" label:"allowEmpty" file:"allowEmpty" kv:"allowEmpty" export:"true"`
 	PassTLSClientCert *PassTLSClientCert `json:"passTLSClientCert,omitempty" toml:"passTLSClientCert,omitempty" yaml:"passTLSClientCert,omitempty" export:"true"`
 	Retry             *Retry             `json:"retry,omitempty" toml:"retry,omitempty" yaml:"retry,omitempty" export:"true"`
+	Jwt               *Jwt               `json:"jwt,omitempty" toml:"jwt,omitempty" yaml:"jwt,omitempty" export:"true"`
 	ContentType       *ContentType       `json:"contentType,omitempty" toml:"contentType,omitempty" yaml:"contentType,omitempty" export:"true"`
 
 	Plugin map[string]PluginConf `json:"plugin,omitempty" toml:"plugin,omitempty" yaml:"plugin,omitempty" export:"true"`
+}
+
+// +k8s:deepcopy-gen=true
+
+// JWt holds the content-type middleware configuration.
+// This middleware exists to enable the correct behavior until at least the default one can be changed in a future version.
+type Jwt struct {
+	// RedisURL is the URL of the Redis server.
+	RedisURL string `json:"redisUrl,omitempty" toml:"redisUrl,omitempty" yaml:"redisUrl,omitempty" export:"true"`
+	// RedisMaxRetry is the maximum number of times to retry when Redis returns an error.
+	RedisMaxRetry int `json:"redisMaxRetry,omitempty" toml:"redisMaxRetry,omitempty" yaml:"redisMaxRetry,omitempty" export:"true"`
+	// RedisDialTimeout is the timeout in seconds for dialing to Redis.
+	RedisDialTimeout int `json:"redisDialTimeout,omitempty" toml:"redisDialTimeout,omitempty" yaml:"redisDialTimeout,omitempty" export:"true"`
 }
 
 // +k8s:deepcopy-gen=true

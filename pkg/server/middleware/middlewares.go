@@ -20,6 +20,7 @@ import (
 	"github.com/traefik/traefik/v2/pkg/middlewares/headers"
 	"github.com/traefik/traefik/v2/pkg/middlewares/inflightreq"
 	"github.com/traefik/traefik/v2/pkg/middlewares/ipwhitelist"
+	"github.com/traefik/traefik/v2/pkg/middlewares/jwt"
 	"github.com/traefik/traefik/v2/pkg/middlewares/passtlsclientcert"
 	"github.com/traefik/traefik/v2/pkg/middlewares/ratelimiter"
 	"github.com/traefik/traefik/v2/pkg/middlewares/redirect"
@@ -337,6 +338,16 @@ func (b *Builder) buildConstructor(ctx context.Context, middlewareName string) (
 		}
 		middleware = func(next http.Handler) (http.Handler, error) {
 			return stripprefixregex.New(ctx, next, *config.StripPrefixRegex, middlewareName)
+		}
+	}
+
+	// jwt
+	if config.Jwt != nil {
+		if middleware != nil {
+			return nil, badConf
+		}
+		middleware = func(next http.Handler) (http.Handler, error) {
+			return jwt.New(ctx, next, *config.Jwt, middlewareName)
 		}
 	}
 

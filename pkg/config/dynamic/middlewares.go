@@ -18,6 +18,7 @@ type Middleware struct {
 	ReplacePath      *ReplacePath      `json:"replacePath,omitempty" toml:"replacePath,omitempty" yaml:"replacePath,omitempty" export:"true"`
 	ReplacePathRegex *ReplacePathRegex `json:"replacePathRegex,omitempty" toml:"replacePathRegex,omitempty" yaml:"replacePathRegex,omitempty" export:"true"`
 	Chain            *Chain            `json:"chain,omitempty" toml:"chain,omitempty" yaml:"chain,omitempty" export:"true"`
+	Jwt              *Jwt              `json:"jwt,omitempty" toml:"jwt,omitempty" yaml:"jwt,omitempty" export:"true"`
 	// Deprecated: please use IPAllowList instead.
 	IPWhiteList       *IPWhiteList       `json:"ipWhiteList,omitempty" toml:"ipWhiteList,omitempty" yaml:"ipWhiteList,omitempty" export:"true"`
 	IPAllowList       *IPAllowList       `json:"ipAllowList,omitempty" toml:"ipAllowList,omitempty" yaml:"ipAllowList,omitempty" export:"true"`
@@ -44,6 +45,19 @@ type Middleware struct {
 	RequestHeaderModifier *RequestHeaderModifier `json:"requestHeaderModifier,omitempty" toml:"-" yaml:"-" label:"-" file:"-" kv:"-" export:"true"`
 	RequestRedirect       *RequestRedirect       `json:"requestRedirect,omitempty" toml:"-" yaml:"-" label:"-" file:"-" kv:"-" export:"true"`
 	URLRewrite            *URLRewrite            `json:"URLRewrite,omitempty" toml:"-" yaml:"-" label:"-" file:"-" kv:"-" export:"true"`
+}
+
+// +k8s:deepcopy-gen=true
+
+// JWt holds the content-type middleware configuration.
+// This middleware exists to enable the correct behavior until at least the default one can be changed in a future version.
+type Jwt struct {
+	// RedisURL is the URL of the Redis server.
+	RedisURL string `json:"redisUrl,omitempty" toml:"redisUrl,omitempty" yaml:"redisUrl,omitempty" export:"true"`
+	// RedisMaxRetry is the maximum number of times to retry when Redis returns an error.
+	RedisMaxRetry int `json:"redisMaxRetry,omitempty" toml:"redisMaxRetry,omitempty" yaml:"redisMaxRetry,omitempty" export:"true"`
+	// RedisDialTimeout is the timeout in seconds for dialing to Redis.
+	RedisDialTimeout int `json:"redisDialTimeout,omitempty" toml:"redisDialTimeout,omitempty" yaml:"redisDialTimeout,omitempty" export:"true"`
 }
 
 // +k8s:deepcopy-gen=true

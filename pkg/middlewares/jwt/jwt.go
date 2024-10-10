@@ -73,24 +73,36 @@ func (jwt *JWT) ServeHTTP(res http.ResponseWriter, req *http.Request) {
 	ctx := middlewares.GetLoggerCtx(req.Context(), jwt.name, typeName)
 	logger := log.FromContext(ctx)
 
-	token := req.Header.Get("Authorization")
-	if token != "" && strings.Contains(token, "JWT ") {
-		count, err := jwt.redisClient.Exists(ctx, strings.Trim(token, "JWT ")).Result()
-		if err != nil {
-			logger.Errorf("JWT: Redis error: %+v", err)
-		} else if count > 0 {
-			logger.Debug("JWT: Blocking jwt token")
-			res.Header().Set("Content-Type", "application/json")
-
-			// To avoid CORS error on browser level (Refer issue CAR-27637), we pass Access-Control-Allow-Origin header with Origin domain.
-			if req.Header.Get("origin") != "" {
-				res.Header().Set("Access-Control-Allow-Origin", req.Header.Get("origin"))
+	isTokenValid := func(token string) bool {
+		if token != "" && strings.Contains(token, "JWT ") {
+			count, err := jwt.redisClient.Exists(ctx, strings.Trim(token, "JWT ")).Result()
+			if err != nil {
+				logger.Errorf("JWT: Redis error: %+v", err)
+			} else if count > 0 {
+				logger.Debug("JWT: Blocking jwt token")
+				return false
 			}
-
-			res.WriteHeader(http.StatusUnauthorized)
-			res.Write([]byte(`{"error_msg":"expired_jwt_token"}`))
-			return
 		}
+		return true
 	}
+
+	authToken := req.Header.Get("Authorization")
+	devToken := req.Header.Get("Developer-token")
+
+	if !(isTokenValid(authToken) && isTokenValid(devToken)) {
+
+		// If Either of the token is not valid, then block the request
+		res.Header().Set("Content-Type", "application/json")
+
+		// To avoid CORS error on browser level (Refer issue CAR-27637), we pass Access-Control-Allow-Origin header with Origin domain.
+		if req.Header.Get("origin") != "" {
+			res.Header().Set("Access-Control-Allow-Origin", req.Header.Get("origin"))
+		}
+
+		res.WriteHeader(http.StatusUnauthorized)
+		res.Write([]byte(`{"error_msg":"expired_jwt_token"}`))
+		return
+	}
+
 	jwt.next.ServeHTTP(res, req)
 }

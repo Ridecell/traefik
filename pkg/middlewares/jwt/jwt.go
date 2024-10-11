@@ -89,7 +89,7 @@ func (jwt *JWT) ServeHTTP(res http.ResponseWriter, req *http.Request) {
 	authToken := req.Header.Get("Authorization")
 	devToken := req.Header.Get("Developer-token")
 
-	if !(isTokenValid(authToken) && isTokenValid(devToken)) {
+	if !(isTokenValid(devToken) && isTokenValid(authToken)) {
 
 		// If Either of the token is not valid, then block the request
 		res.Header().Set("Content-Type", "application/json")

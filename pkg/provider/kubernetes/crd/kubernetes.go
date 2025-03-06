@@ -1039,6 +1039,7 @@ func buildTLSOptions(ctx context.Context, client Client) map[string]tls.Options 
 		if tlsOptionsCRD.Spec.ALPNProtocols != nil {
 			tlsOption.ALPNProtocols = tlsOptionsCRD.Spec.ALPNProtocols
 		}
+		tlsOption.SessionTicketsDisabled = tlsOptionsCRD.Spec.SessionTicketsDisabled
 
 		tlsOptions[id] = tlsOption
 	}

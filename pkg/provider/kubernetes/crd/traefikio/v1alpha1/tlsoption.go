@@ -49,6 +49,8 @@ type TLSOptionSpec struct {
 	// It is enabled automatically when minVersion or maxVersion is set.
 	// Deprecated: https://github.com/golang/go/issues/45430
 	PreferServerCipherSuites *bool `json:"preferServerCipherSuites,omitempty"`
+
+	SessionTicketsDisabled bool `json:"sessionTicketsDisabled,omitempty"`
 }
 
 // +k8s:deepcopy-gen=true

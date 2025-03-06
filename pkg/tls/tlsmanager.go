@@ -392,6 +392,7 @@ func buildTLSConfig(tlsOption Options) (*tls.Config, error) {
 				return nil, fmt.Errorf("invalid CipherSuite: %s", cipher)
 			}
 		}
+
 	}
 
 	// Set the list of CurvePreferences/CurveIDs if set in the config
@@ -407,7 +408,7 @@ func buildTLSConfig(tlsOption Options) (*tls.Config, error) {
 			}
 		}
 	}
-
+	conf.SessionTicketsDisabled = tlsOption.SessionTicketsDisabled
 	return conf, nil
 }
 

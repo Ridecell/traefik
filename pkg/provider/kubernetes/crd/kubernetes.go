@@ -930,8 +930,9 @@ func buildTLSOptions(ctx context.Context, client Client) map[string]tls.Options 
 				CAFiles:        clientCAs,
 				ClientAuthType: tlsOption.Spec.ClientAuth.ClientAuthType,
 			},
-			SniStrict:     tlsOption.Spec.SniStrict,
-			ALPNProtocols: alpnProtocols,
+			SniStrict:              tlsOption.Spec.SniStrict,
+			ALPNProtocols:          alpnProtocols,
+			SessionTicketsDisabled: tlsOption.Spec.SessionTicketsDisabled,
 		}
 	}
 

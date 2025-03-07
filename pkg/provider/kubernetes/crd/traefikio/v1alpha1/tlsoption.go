@@ -48,6 +48,8 @@ type TLSOptionSpec struct {
 	// ALPNProtocols defines the list of supported application level protocols for the TLS handshake, in order of preference.
 	// More info: https://doc.traefik.io/traefik/v2.10/https/tls/#alpn-protocols
 	ALPNProtocols []string `json:"alpnProtocols,omitempty"`
+
+	SessionTicketsDisabled bool `json:"sessionTicketsDisabled,omitempty"`
 }
 
 // +k8s:deepcopy-gen=true

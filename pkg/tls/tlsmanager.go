@@ -399,6 +399,7 @@ func buildTLSConfig(tlsOption Options) (*tls.Config, error) {
 		}
 	}
 
+	conf.SessionTicketsDisabled = tlsOption.SessionTicketsDisabled
 	return conf, nil
 }
 
